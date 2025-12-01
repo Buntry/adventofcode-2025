@@ -4,40 +4,30 @@ dial_start = 50
 dial_size = 100
 
 current_dial_position = dial_start
-total_dials_points_at_zero_condition = 0
-total_dials_crossing_zero_condition = 0
-
-# sol 1
-
-# for line in input_lines:
-#     direction, count = line[0], int(line[1:])    
-#     if direction == "R":
-#         current_dial_position += count
-#     elif direction == "L":
-#         current_dial_position -= count
-    
-#     current_dial_position %= dial_size
-#     if current_dial_position == 0:
-#         total_dials_points_at_zero_condition += 1
-# print("Solution 1:", total_dials_points_at_zero_condition)
-
-
-# sol 2
+total_rotations_end_at_zero = 0
+total_rotation_clicks_at_zero = 0
 
 for line in input_lines:
     direction, count = line[0], int(line[1:])
-    
     if direction == "R":
-        total_dials_crossing_zero_condition += (current_dial_position + count) // dial_size
+        # cross zero as frequently as floor dial size division
+        total_rotation_clicks_at_zero += (current_dial_position + count) // dial_size
+
+        # move right
         current_dial_position = (current_dial_position + count) % dial_size
-    else:  # "L"
+    elif direction == "L":
+        # if we start at zero, we cross every full rotation
         if current_dial_position == 0:
-            # Going left: we pass 0 every 100 clicks
-            total_dials_crossing_zero_condition += count // dial_size
+            total_rotation_clicks_at_zero += count // dial_size
+        # else if count would bring us beyond the threshold, every full rotation afterwards hits zero
         elif count >= current_dial_position:
-            # We'll pass through 0, then potentially more times
-            total_dials_crossing_zero_condition += (count - current_dial_position) // dial_size + 1
-        # else: count < current_dial_position, so we don't reach 0
+            total_rotation_clicks_at_zero += 1 + ((count - current_dial_position) // dial_size)
+
+        # move left
         current_dial_position = (current_dial_position - count) % dial_size
 
-print("Solution 2:", total_dials_crossing_zero_condition)
+    if current_dial_position == 0:
+        total_rotations_end_at_zero += 1
+
+print("Solution 2:", total_rotations_end_at_zero)
+print("Solution 2:", total_rotation_clicks_at_zero)
