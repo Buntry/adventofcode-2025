@@ -29,5 +29,5 @@ for line in input_lines:
     if current_dial_position == 0:
         total_rotations_end_at_zero += 1
 
-print("Solution 2:", total_rotations_end_at_zero)
+print("Solution 1:", total_rotations_end_at_zero)
 print("Solution 2:", total_rotation_clicks_at_zero)
