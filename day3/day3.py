@@ -27,6 +27,7 @@ def max_joltage(batteries, num_batteries=2):
         if battery_count == 0:
             continue
         
+        # if there is only 1 battery to choose, take the maximum from position p onwards
         if battery_count == 1:
             for p in reversed(range(0, len(batteries))):
                 if p+1 == len(batteries):
