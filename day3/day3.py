@@ -23,39 +23,33 @@ def max_joltage(batteries, num_batteries=2):
     cumulative_joltage = [[0 for _ in range(0, len(batteries))] for _ in range(0, num_batteries+1)]
 
     for battery_count in range(0, num_batteries+1):
-        # we don't really care about zero batteries
+        # we don't really care about zero batteries, already init'd to 0
         if battery_count == 0:
             continue
         
-        # if there is only 1 battery to choose, take the maximum from position p onwards
-        if battery_count == 1:
-            for p in reversed(range(0, len(batteries))):
-                if p+1 == len(batteries):
-                    cumulative_joltage[1][p] = int(batteries[p])
-                else:
-                    cumulative_joltage[1][p] = max(cumulative_joltage[1][p+1], int(batteries[p]))
-        else:
-            for pos in reversed(range(0, len(batteries))):
-                # No more room for remaining batteries
-                remaining_battery_count = len(batteries) - pos
-                if battery_count > remaining_battery_count:
-                    cumulative_joltage[battery_count][pos] = 0
-                    continue
+        for pos in reversed(range(0, len(batteries))):
+            # no more room for remaining batteries
+            remaining_battery_count = len(batteries) - pos
+            if battery_count > remaining_battery_count:
+                cumulative_joltage[battery_count][pos] = 0
+                continue
 
-                # best joltage at position
-                best_joltage_at_pos = None
+            # best joltage at position
+            best_joltage_at_pos = None
 
-                # joltage if we take this battery
-                joltage_with_take = (int(batteries[pos]) * int(pow(10, battery_count-1))) + cumulative_joltage[battery_count-1][pos+1]
-                
-                # determine if we must take this battery, otherwise get the skip value
-                if battery_count == remaining_battery_count:
-                    best_joltage_at_pos = joltage_with_take
-                else:
-                    joltage_with_skip = cumulative_joltage[battery_count][pos+1]
-                    best_joltage_at_pos = max(joltage_with_take, joltage_with_skip)
+            # joltage if we take this battery
+            single_battery_joltage = (int(batteries[pos]) * int(pow(10, battery_count-1)))
+            remaining_batteries_joltage = cumulative_joltage[battery_count-1][pos+1] if pos+1 < len(batteries) else 0
+            joltage_with_take = single_battery_joltage + remaining_batteries_joltage
+            
+            # determine if we must take this battery, otherwise get the skip value
+            if battery_count == remaining_battery_count:
+                best_joltage_at_pos = joltage_with_take
+            else:
+                joltage_with_skip = cumulative_joltage[battery_count][pos+1]
+                best_joltage_at_pos = max(joltage_with_take, joltage_with_skip)
 
-                cumulative_joltage[battery_count][pos] = best_joltage_at_pos
+            cumulative_joltage[battery_count][pos] = best_joltage_at_pos
     
     return cumulative_joltage[num_batteries][0]
 
