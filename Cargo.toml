@@ -1,0 +1,10 @@
+[package]
+name = "adventofcode-2025"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "adventofcode-2025"
+path = "main.rs"
+
+[dependencies]
